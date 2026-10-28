@@ -311,11 +311,11 @@
 <section class="section hero is-light viz-root">
   <div class="container is-max-desktop">
     <h2 class="title is-3 has-text-centered">Adapted images train better classifiers</h2>
-    <p class="section-lead">A ResNet-50 trained from scratch on generated images only, tested on real images. Across three generator families the adapter beats the released student and the base-first hybrid, which needs the base at generation. The unguided base is the reference to approach: ahead in every comparison but klein at 200 classes, where the adapter matches it.</p>
+    <p class="section-lead">A ResNet-50 trained from scratch on generated images only, tested on real images. Across three generator families the adapter beats the released student and the base-first hybrid, which needs the base at generation. The much slower unguided base is shown for reference.</p>
   </div>
   <div class="viz-card" id="fig-main">
     <div class="viz-title">Real-image top-1 accuracy by sampler</div>
-    <div class="viz-subtitle">Pick the evaluation; hover a bar for the numbers.</div>
+    <div class="viz-subtitle">Pick a model and a dataset; hover a bar for the numbers.</div>
   </div>
 </section>
 <!-- End main results -->
@@ -333,21 +333,8 @@
 </section>
 <!-- End cost -->
 
-<!-- Design choices -->
-<section class="section hero is-light viz-root">
-  <div class="container is-max-desktop">
-    <h2 class="title is-3 has-text-centered">The target decides, not the capacity</h2>
-    <p class="section-lead">Training the same adapter toward a guided target, or stopping the jump at the student's own first level, gives up most of the gain. Rank and full fine-tuning barely matter. Training-free diversity methods recover less.</p>
-  </div>
-  <div class="viz-card" id="fig-ablation">
-    <div class="viz-title">Adapter ablations on ImageNet-100</div>
-    <div class="viz-subtitle">The dashed line marks our adapter; pick the generator.</div>
-  </div>
-</section>
-<!-- End design choices -->
-
 <!-- Transfer -->
-<section class="section viz-root">
+<section class="section hero is-light viz-root">
   <div class="container is-max-desktop">
     <h2 class="title is-3 has-text-centered">Fixed adapters transfer to fine-grained datasets</h2>
     <p class="section-lead">The adapters trained on ImageNet-100 class names are applied unchanged to Food-101, Stanford Cars and Oxford-IIIT Pets. They beat SDA, a public diversity LoRA for Z-Image-Turbo, and improve DP-DMD's released student.</p>
@@ -378,7 +365,7 @@
 <!-- End transfer -->
 
 <!-- Scope -->
-<section class="section hero is-light">
+<section class="section">
   <div class="container is-max-desktop">
     <h2 class="title is-3 has-text-centered">Where it helps, and where it does not</h2>
     <div class="content scope-list">
@@ -425,7 +412,7 @@ End paper poster -->
 
 
 <!-- Acknowledgments -->
-<section class="hero is-small">
+<section class="hero is-small is-light">
   <div class="hero-body">
     <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">

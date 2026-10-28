@@ -1,12 +1,12 @@
 // Interactive sections for the Fast and Useful page: grouped accuracy bars
-// (main results, ablations, fine-grained transfer) and accuracy against
+// (main results, fine-grained transfer) and accuracy against
 // generation time. Numbers are the paper draft's
 // (Overleaf 154b522): Table S-main-complete (tables/t1-main.tex) for the
 // main and cost charts, plus the two unguided-base cells only Table 1
 // (t1-scale-transfer) has: klein 20 steps at 200 classes and SD 2.1 at
 // ImageNet-1k. Seconds per image at full precision from
-// code/results/sets.csv (the input of Fig. 4); Table 2 (t2-ablation);
-// Table 4 (t3-finegrained); Fig. 3 for SDA and DP-DMD. Plain SVG, no libraries.
+// code/results/sets.csv (the input of Fig. 4); Table 4 (t3-finegrained);
+// Fig. 3 for SDA and DP-DMD. Plain SVG, no libraries.
 (function () {
   'use strict';
 
@@ -20,23 +20,21 @@
     ours: { color: '#4a3aa7', name: 'Ours: adapted first step' },
     base: { color: '#2a78d6', name: 'Base, no guidance' },
     guided: { color: '#9dbfe9', name: 'Base, default guidance' },
-    other: { color: '#6f706f', name: 'Other method' },
-    variant: { color: '#94a3b8', name: 'Ablation variant' }
+    other: { color: '#6f706f', name: 'Other method' }
   };
 
   // ------------------------------------------------------------- data
   // v: { view: [mean, sd] }; a missing view means not evaluated there.
+  // byGroup: pick one group (generator) and one view at a time.
   var MAIN = {
+    byGroup: true,
     views: [
-      { id: 'in100', label: 'ImageNet-100', sub: 'ResNet-50 top-1 on real ImageNet-100 validation images, 500 generated images per class.',
-        insight: 'All three adapters beat their base-first samplers with fewer denoiser evaluations. The unguided bases stay ahead; at default guidance the same bases fall far below them.' },
-      { id: 'c200', label: '200 classes', sub: 'A 200-class ImageNet protocol, 500 generated images per class. It informed development and includes classes absent from adapter training.',
-        insight: 'The ranking holds with twice the classes: adapter above base-first above the released student, in every family. On klein the adapter matches its unguided base here (48.6 vs 48.1 at 20 steps and 48.2 at 50).' },
-      { id: 'in1k', label: 'ImageNet-1k', sub: 'Full ImageNet-1k, 1,281 generated images per class, adapters and samplers fixed beforehand.',
-        insight: 'At full scale the adapters beat base-first by 3.5 [2.9, 4.1] points on klein and 5.4 [5.0, 5.8] on SD-Turbo (paired 95% class-bootstrap intervals). The adapters recover 90% (klein) and 62% (SD-Turbo) of their unguided bases’ gains over the released students.' }
+      { id: 'in100', label: 'ImageNet-100', sub: 'Real ImageNet-100 validation images, 500 generated images per class.' },
+      { id: 'c200', label: '200 classes', sub: 'A 200-class ImageNet protocol, 500 generated images per class, including classes absent from adapter training.' },
+      { id: 'in1k', label: 'ImageNet-1k', sub: 'Full ImageNet-1k, 1,281 generated images per class.' }
     ],
     max: 55,
-    note: 'Mean ± SD over three classifier seeds. Our ImageNet-100 bars pool three adapter-training runs × three classifier seeds (N = 9); elsewhere one adapter run. Z-Image-Turbo’s released student uses its own nine steps; SDA uses its documented eight-step sampler, where the released student scores 13.8 ± 0.4.',
+    note: 'ResNet-50 top-1, mean ± SD over three classifier seeds; our ImageNet-100 bars pool three adapter-training runs (N = 9).',
     groups: [
       { label: 'FLUX.2-klein', rows: [
         { label: 'Released student', role: 'released', nfe: 4, v: { in100: [17.1, 0.4], c200: [19.1, 0.0], in1k: [8.4, 0.1] } },
@@ -53,7 +51,7 @@
         { label: 'SD 2.1, no guidance, 30 steps', short: 'Base, unguided 30', role: 'base', nfe: 30, v: { in100: [49.8, 0.7], c200: [45.7, 0.9], in1k: [44.1, 0.1] } },
         { label: 'SD 2.1, default guidance', short: 'Base, guided', role: 'guided', nfe: 60, v: { in100: [30.0, 0.1], c200: [31.5, 0.3] } }
       ] },
-      { label: 'Z-Image-Turbo', rows: [
+      { label: 'Z-Image-Turbo', note: 'The released student uses its own nine steps; SDA uses its documented eight-step sampler, where the released student scores 13.8 ± 0.4.', rows: [
         { label: 'Released student', role: 'released', nfe: 9, v: { in100: [14.0, 0.0], c200: [13.9, 0.4] } },
         { label: 'SDA, public diversity LoRA', short: 'SDA', role: 'other', nfe: 8, v: { in100: [25.1, 0.1] } },
         { label: 'Base-first', role: 'basefirst', nfe: 9, v: { in100: [32.8, 0.9], c200: [35.3, 0.3] } },
@@ -61,51 +59,10 @@
         { label: 'Base, no guidance, 50 steps', short: 'Base, unguided 50', role: 'base', nfe: 50, v: { in100: [45.6, 0.7] } },
         { label: 'Base, default guidance', short: 'Base, guided', role: 'guided', nfe: 100, v: { in100: [17.6, 0.3] } }
       ] },
-      { label: 'DP-DMD’s released student (SD3.5-Medium)', rows: [
+      { label: 'DP-DMD’s released student (SD3.5-Medium)', short: 'DP-DMD', rows: [
         { label: 'DP-DMD student', role: 'released', nfe: 4, v: { in100: [13.9, 0.2] } },
         { label: 'DP-DMD + ours', role: 'ours', nfe: 3, v: { in100: [27.3, 0.2] } },
         { label: 'SD3.5-Medium, no guidance', short: 'Base, unguided', role: 'base', nfe: 28, v: { in100: [44.9, 0.3] } }
-      ] }
-    ]
-  };
-
-  var ABLATION = {
-    views: [
-      { id: 'klein', label: 'FLUX.2-klein', sub: 'ImageNet-100 top-1, ResNet-50, 500 generated images per class. Guided-target and endpoint variants use the finer teacher grid.',
-        insight: 'A target at default guidance keeps 3 of the 26.7 points our adapter gains; jumping only to the student’s first level keeps 15. Rank 8 to 128 and full fine-tuning stay within 0.7 points.' },
-      { id: 'sdt', label: 'SD-Turbo', sub: 'ImageNet-100 top-1, ResNet-50, 500 generated images per class.',
-        insight: 'The same order on SD-Turbo: the default-guidance target and the first-level jump each give up about half of the gain, and skipping the first step without training falls below the released student.' }
-    ],
-    max: 50,
-    ref: true,
-    note: 'Mean ± SD over three classifier seeds. Ours and SD-Turbo rank 128 pool three adapter runs; other variants use one. FSG, MoNO and skipping step 1 require no training. “Adapter in every step” reuses the first-step-trained checkpoint at every step of the adapted schedule.',
-    groups: [
-      { label: 'Ours', rows: [
-        { label: 'Unguided target, step 1, rank 32', short: 'Ours', role: 'ours', v: { klein: [43.8, 0.4], sdt: [43.7, 0.6] } },
-        { label: 'Same, finer teacher grid', short: 'Ours, finer grid', role: 'ours', v: { klein: [43.2, 0.7] } }
-      ] },
-      { label: 'Target guidance', rows: [
-        { label: 'Target at guidance 2', short: 'Guidance 2', role: 'variant', v: { klein: [31.5, 0.7], sdt: [41.2, 0.9] } },
-        { label: 'Target at default guidance', short: 'Default guidance', role: 'variant', v: { klein: [20.1, 0.4], sdt: [30.4, 0.4] } }
-      ] },
-      { label: 'Jump endpoint', rows: [
-        { label: 'Jump to the first level only', short: 'First level only', role: 'variant', v: { klein: [32.1, 0.6], sdt: [32.2, 0.4] } },
-        { label: 'Jump to a deeper level', short: 'Deeper level', role: 'variant', v: { klein: [40.0, 0.5], sdt: [41.2, 0.7] } }
-      ] },
-      { label: 'Placement and capacity', rows: [
-        { label: 'Adapter in every step', short: 'Every step', role: 'variant', v: { klein: [41.4, 0.3], sdt: [38.8, 0.8] } },
-        { label: 'Every weight fine-tuned', short: 'Full fine-tune', role: 'variant', v: { klein: [43.2, 1.0], sdt: [43.4, 0.3] } },
-        { label: 'Rank 8', role: 'variant', v: { klein: [43.4, 0.3], sdt: [43.3, 0.3] } },
-        { label: 'Rank 128', role: 'variant', v: { klein: [44.1, 0.4], sdt: [44.4, 0.6] } }
-      ] },
-      { label: 'Training-free alternatives', rows: [
-        { label: 'FSG', role: 'other', v: { klein: [20.7, 0.7] } },
-        { label: 'MoNO, 4 images per basis', short: 'MoNO, 4 per basis', role: 'other', v: { klein: [26.8, 0.3] } },
-        { label: 'MoNO, 32 images per basis', short: 'MoNO, 32 per basis', role: 'other', v: { klein: [29.9, 0.3] } },
-        { label: 'Skip the first step', short: 'Skip first step', role: 'other', v: { klein: [31.8, 0.3], sdt: [14.4, 0.7] } }
-      ] },
-      { label: 'Reference', rows: [
-        { label: 'Released student alone', short: 'Released student', role: 'released', v: { klein: [17.1, 0.4], sdt: [18.3, 0.3] } }
       ] }
     ]
   };
@@ -196,14 +153,18 @@
     var buttons = items.map(function (it) {
       var b = html('button', 'chip', it.label, row);
       b.type = 'button';
-      b.setAttribute('aria-pressed', it.id === initial ? 'true' : 'false');
-      b.addEventListener('click', function () {
-        buttons.forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
-        b.setAttribute('aria-pressed', 'true');
-        onPick(it.id);
-      });
+      b.addEventListener('click', function () { press(it.id); onPick(it.id); });
       return b;
     });
+    function press(id) {
+      buttons.forEach(function (x, i) { x.setAttribute('aria-pressed', items[i].id === id ? 'true' : 'false'); });
+    }
+    press(initial);
+    return {
+      press: press,
+      // Greys out the items `ok` rejects, for combinations never evaluated.
+      enable: function (ok) { buttons.forEach(function (x, i) { x.disabled = !ok(items[i].id); }); }
+    };
   }
   function tooltip(card) {
     var t = html('div', 'viz-tooltip', null, card);
@@ -224,14 +185,19 @@
   }
   function legend(card, roles) {
     var keys = html('div', 'viz-legend', null, card);
-    keys.innerHTML = roles.map(function (r) {
-      return '<span class="key"><span class="swatch" style="background:' + ROLE[r].color + '"></span>' + ROLE[r].name + '</span>';
-    }).join('');
+    keys.set = function (roles) {
+      keys.innerHTML = roles.map(function (r) {
+        return '<span class="key"><span class="swatch" style="background:' + ROLE[r].color + '"></span>' + ROLE[r].name + '</span>';
+      }).join('');
+    };
+    keys.set(roles);
+    return keys;
   }
-  function usedRoles(spec) {
+  // Roles of the rows drawn for one view, in legend order.
+  function usedRoles(groups, view) {
     var seen = {};
-    spec.groups.forEach(function (g) { g.rows.forEach(function (r) { seen[r.role] = true; }); });
-    return ['released', 'other', 'variant', 'basefirst', 'ours', 'base', 'guided'].filter(function (r) { return seen[r]; });
+    groups.forEach(function (g) { g.rows.forEach(function (r) { if (r.v[view]) seen[r.role] = true; }); });
+    return ['released', 'other', 'basefirst', 'ours', 'base', 'guided'].filter(function (r) { return seen[r]; });
   }
 
   // ------------------------------------------------------------- grouped bars
@@ -239,16 +205,29 @@
     return function (card, W) {
       var narrow = W < 560;
       var labelW = narrow ? 128 : 220, right = narrow ? 70 : 92, top = 24, rowH = narrow ? 26 : 28, groupH = 30;
-      var state = card._state || (card._state = { view: spec.views[0].id });
+      var state = card._state || (card._state = { view: spec.views[0].id, group: 0 });
       var tip = tooltip(card);
       var sub = card.querySelector('.viz-subtitle');
-      chips(card, 'Show', spec.views.map(function (v) { return { id: v.id, label: v.label }; }), state.view,
+      function has(g, view) { return g.rows.some(function (r) { return r.v[view]; }); }
+      var viewChips;
+      if (spec.byGroup) {
+        chips(card, 'Model', spec.groups.map(function (g, i) { return { id: i, label: g.short || g.label.replace(/ \(.*\)$/, '') }; }), state.group,
+          function (i) {
+            state.group = i;
+            var g = spec.groups[i];
+            if (!has(g, state.view)) { state.view = spec.views.filter(function (v) { return has(g, v.id); })[0].id; viewChips.press(state.view); }
+            viewChips.enable(function (id) { return has(g, id); });
+            draw();
+          });
+      }
+      viewChips = chips(card, spec.byGroup ? 'Dataset' : 'Show', spec.views.map(function (v) { return { id: v.id, label: v.label }; }), state.view,
         function (id) { state.view = id; draw(); });
+      if (spec.byGroup) viewChips.enable(function (id) { return has(spec.groups[state.group], id); });
       var svg = el('svg', { class: 'viz-svg', role: 'img' }, card);
-      legend(card, usedRoles(spec));
-      var insight = html('div', 'viz-insight', null, card);
-      insight.setAttribute('aria-live', 'polite');
-      if (spec.note) html('div', 'viz-note', spec.note, card);
+      var keys = legend(card, []);
+      var insight = spec.views.some(function (v) { return v.insight; }) ? html('div', 'viz-insight', null, card) : null;
+      if (insight) insight.setAttribute('aria-live', 'polite');
+      var note = html('div', 'viz-note', null, card);
       var details = html('details', 'viz-table-toggle', null, card);
       html('summary', null, 'Show as a table', details);
       var table = html('table', 'table is-narrow is-striped', null, details);
@@ -258,10 +237,12 @@
         var fade = drawnOnce && !reduceMotion;
         drawnOnce = true;
         var view = spec.views.filter(function (v) { return v.id === state.view; })[0];
+        var groups = spec.byGroup ? [spec.groups[state.group]] : spec.groups;
+        var gH = spec.byGroup ? 0 : groupH;
         var H = top;
-        spec.groups.forEach(function (g) {
+        groups.forEach(function (g) {
           var n = g.rows.filter(function (r) { return r.v[view.id]; }).length;
-          H += groupH + Math.max(n, 1) * rowH;
+          H += gH + Math.max(n, 1) * rowH;
         });
         H += 4;
         svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
@@ -274,12 +255,10 @@
           el('line', { class: v === 0 ? 'zero-line' : 'grid-line', x1: X(v), x2: X(v), y1: top - 6, y2: H }, svg);
           el('text', { class: 'tick-label', x: X(v), y: top - 11, 'text-anchor': 'middle' }, svg).textContent = v + (v === ticks[ticks.length - 1] ? '%' : '');
         });
-        var refV = null;
-        if (spec.ref) spec.groups[0].rows.forEach(function (r) { if (refV == null && r.role === 'ours' && r.v[view.id]) refV = r.v[view.id][0]; });
         var summary = [], y = top, i = 0;
-        spec.groups.forEach(function (g) {
-          el('text', { class: 'group-label', x: 0, y: y + groupH - 9 }, svg).textContent = g.label;
-          y += groupH;
+        groups.forEach(function (g) {
+          if (gH) el('text', { class: 'group-label', x: 0, y: y + gH - 9 }, svg).textContent = g.label;
+          y += gH;
           var rows = g.rows.filter(function (r) { return r.v[view.id]; });
           if (!rows.length) {
             el('text', { class: 'group-note', x: labelW, y: y + rowH / 2 + 4 }, svg).textContent = 'Not evaluated at this scale';
@@ -309,13 +288,14 @@
             y += rowH;
           });
         });
-        if (refV != null) el('line', { class: 'ref-line', x1: X(refV), x2: X(refV), y1: top - 6, y2: H }, svg);
         el('title', {}, svg).textContent = view.label + ', top-1 accuracy (%): ' + summary.join('; ');
+        keys.set(usedRoles(groups, view.id));
         sub.textContent = view.sub;
-        insight.textContent = view.insight;
+        if (insight) insight.textContent = view.insight;
+        note.textContent = [spec.note].concat(groups.map(function (g) { return g.note; })).filter(Boolean).join(' ');
         table.innerHTML = '<thead><tr><th>Group</th><th>Sampler</th>' + (spec.groups[0].rows[0].nfe ? '<th>NFE</th>' : '') +
           '<th>Top-1 (%)</th></tr></thead><tbody>' +
-          spec.groups.map(function (g) {
+          groups.map(function (g) {
             return g.rows.filter(function (r) { return r.v[view.id]; }).map(function (r) {
               return '<tr><td>' + g.label + '</td><td>' + r.label + '</td>' + (spec.groups[0].rows[0].nfe ? '<td>' + (r.nfe || '') + '</td>' : '') +
                 '<td>' + pm(r.v[view.id]) + '</td></tr>';
@@ -416,7 +396,7 @@
   }
 
   function init() {
-    var pairs = [['fig-main', bars(MAIN)], ['fig-cost', cost], ['fig-ablation', bars(ABLATION)], ['fig-finegrained', bars(FINEGRAINED)]];
+    var pairs = [['fig-main', bars(MAIN)], ['fig-cost', cost], ['fig-finegrained', bars(FINEGRAINED)]];
     pairs.forEach(function (p) { var card = document.getElementById(p[0]); if (card) mount(card, p[1]); });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
