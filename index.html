@@ -311,7 +311,7 @@
 <section class="section hero is-light viz-root">
   <div class="container is-max-desktop">
     <h2 class="title is-3 has-text-centered">Adapted images train better classifiers</h2>
-    <p class="section-lead">A ResNet-50 trained from scratch on generated images only, tested on real images. Across three generator families the adapter beats the released student and the base-first hybrid, which needs the base at generation; the unguided base stays the upper reference.</p>
+    <p class="section-lead">A ResNet-50 trained from scratch on generated images only, tested on real images. Across three generator families the adapter beats the released student and the base-first hybrid, which needs the base at generation. The unguided base is the reference to approach: ahead in every comparison but klein at 200 classes, where the adapter matches it.</p>
   </div>
   <div class="viz-card" id="fig-main">
     <div class="viz-title">Real-image top-1 accuracy by sampler</div>
@@ -383,7 +383,7 @@
     <h2 class="title is-3 has-text-centered">Where it helps, and where it does not</h2>
     <div class="content scope-list">
       <ul>
-        <li><strong>The unguided base remains more accurate.</strong> At ImageNet-1k scale klein's adapter recovers 90% of its unguided 20-step base's gain over the released student (34.2 vs 37.2) in under a fifth of the time per image.</li>
+        <li><strong>The unguided base remains more accurate in most comparisons.</strong> At ImageNet-1k scale the adapters recover 90% of the unguided base's gain over the released student on klein (34.2 vs 37.2) and 62% on SD-Turbo (32.1 vs 44.1), in under a fifth and under a quarter of the base's time per image.</li>
         <li><strong>Preparation is a one-time cost.</strong> It makes adaptation dearer than base-first sampling for small sets; counting it, adaptation becomes the cheaper option after about 399,000 images for klein and 807,000 for SD-Turbo, while giving higher accuracy throughout.</li>
         <li><strong>Prompts matter.</strong> At ImageNet-1k with 100 images per class, the template-based adapter beats the released students prompted with LLM descriptions (+2.7 points for klein, +7.1 for SD-Turbo). Combined with LLM prompts, SD-Turbo's adapter still helps (+6.9), while klein's falls 1.5 points below its released student.</li>
         <li><strong>A compatible base is required</strong> to build the targets, and the jump endpoint is chosen empirically per generator. We test classification and feature transfer; detection and segmentation remain untested.</li>

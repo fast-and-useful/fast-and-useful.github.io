@@ -1,8 +1,10 @@
 // Interactive sections for the Fast and Useful page: grouped accuracy bars
 // (main results, ablations, fine-grained transfer) and accuracy against
 // generation time. Numbers are the paper draft's
-// (Overleaf 033c8df): Table S-main-complete (tables/t1-main.tex) for the
-// main and cost charts, with seconds per image at full precision from
+// (Overleaf 154b522): Table S-main-complete (tables/t1-main.tex) for the
+// main and cost charts, plus the two unguided-base cells only Table 1
+// (t1-scale-transfer) has: klein 20 steps at 200 classes and SD 2.1 at
+// ImageNet-1k. Seconds per image at full precision from
 // code/results/sets.csv (the input of Fig. 4); Table 2 (t2-ablation);
 // Table 4 (t3-finegrained); Fig. 3 for SDA and DP-DMD. Plain SVG, no libraries.
 (function () {
@@ -29,9 +31,9 @@
       { id: 'in100', label: 'ImageNet-100', sub: 'ResNet-50 top-1 on real ImageNet-100 validation images, 500 generated images per class.',
         insight: 'All three adapters beat their base-first samplers with fewer denoiser evaluations. The unguided bases stay ahead; at default guidance the same bases fall far below them.' },
       { id: 'c200', label: '200 classes', sub: 'A 200-class ImageNet protocol, 500 generated images per class. It informed development and includes classes absent from adapter training.',
-        insight: 'The ranking holds with twice the classes: adapter above base-first above the released student, in every family.' },
+        insight: 'The ranking holds with twice the classes: adapter above base-first above the released student, in every family. On klein the adapter matches its unguided base here (48.6 vs 48.1 at 20 steps and 48.2 at 50).' },
       { id: 'in1k', label: 'ImageNet-1k', sub: 'Full ImageNet-1k, 1,281 generated images per class, adapters and samplers fixed beforehand.',
-        insight: 'At full scale the adapters beat base-first by 3.5 [2.9, 4.1] points on klein and 5.4 [5.0, 5.8] on SD-Turbo (paired 95% class-bootstrap intervals). Klein’s adapter recovers 90% of its unguided 20-step base’s gain over the released student.' }
+        insight: 'At full scale the adapters beat base-first by 3.5 [2.9, 4.1] points on klein and 5.4 [5.0, 5.8] on SD-Turbo (paired 95% class-bootstrap intervals). The adapters recover 90% (klein) and 62% (SD-Turbo) of their unguided bases’ gains over the released students.' }
     ],
     max: 55,
     note: 'Mean ± SD over three classifier seeds. Our ImageNet-100 bars pool three adapter-training runs × three classifier seeds (N = 9); elsewhere one adapter run. Z-Image-Turbo’s released student uses its own nine steps; SDA uses its documented eight-step sampler, where the released student scores 13.8 ± 0.4.',
@@ -41,14 +43,14 @@
         { label: 'Base-first', role: 'basefirst', nfe: 4, v: { in100: [39.9, 0.3], c200: [43.7, 0.1], in1k: [30.8, 0.1] } },
         { label: 'Ours', role: 'ours', nfe: 2, v: { in100: [43.8, 0.4], c200: [48.6, 0.3], in1k: [34.2, 0.1] } },
         { label: 'Base, no guidance, 50 steps', short: 'Base, unguided 50', role: 'base', nfe: 50, v: { in100: [45.1, 0.0], c200: [48.2, 0.1] } },
-        { label: 'Base, no guidance, 20 steps', short: 'Base, unguided 20', role: 'base', nfe: 20, v: { in100: [44.7, 0.9], in1k: [37.2, 0.1] } },
+        { label: 'Base, no guidance, 20 steps', short: 'Base, unguided 20', role: 'base', nfe: 20, v: { in100: [44.7, 0.9], c200: [48.1, 0.2], in1k: [37.2, 0.1] } },
         { label: 'Base, default guidance', short: 'Base, guided', role: 'guided', nfe: 100, v: { in100: [23.6, 0.5], c200: [27.0, 0.2] } }
       ] },
       { label: 'SD-Turbo (base: SD 2.1)', rows: [
         { label: 'Released student', role: 'released', nfe: 4, v: { in100: [18.3, 0.3], c200: [19.8, 0.3], in1k: [12.7, 0.2] } },
         { label: 'Base-first', role: 'basefirst', nfe: 4, v: { in100: [36.4, 0.9], c200: [36.0, 0.2], in1k: [26.7, 0.3] } },
         { label: 'Ours', role: 'ours', nfe: 3, v: { in100: [43.7, 0.6], c200: [41.3, 0.8], in1k: [32.1, 0.3] } },
-        { label: 'SD 2.1, no guidance, 30 steps', short: 'Base, unguided 30', role: 'base', nfe: 30, v: { in100: [49.8, 0.7], c200: [45.7, 0.9] } },
+        { label: 'SD 2.1, no guidance, 30 steps', short: 'Base, unguided 30', role: 'base', nfe: 30, v: { in100: [49.8, 0.7], c200: [45.7, 0.9], in1k: [44.1, 0.1] } },
         { label: 'SD 2.1, default guidance', short: 'Base, guided', role: 'guided', nfe: 60, v: { in100: [30.0, 0.1], c200: [31.5, 0.3] } }
       ] },
       { label: 'Z-Image-Turbo', rows: [
