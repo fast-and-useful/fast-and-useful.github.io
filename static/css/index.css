@@ -998,8 +998,6 @@ a:focus {
 .compact-table { max-width: 44rem; margin: 1.25rem auto 0; }
 .compact-table table { width: 100%; font-size: 0.9rem; font-variant-numeric: tabular-nums; background: transparent; }
 .compact-table th { color: var(--text-secondary); font-weight: 600; }
-.scope-list { max-width: 46rem; margin: 1.25rem auto 0; }
-.scope-list li { margin-bottom: 0.75rem; line-height: 1.55; }
 .viz-svg .group-label { fill: var(--viz-ink); font-size: 13px; font-weight: 700; }
 .viz-svg .group-note { fill: var(--text-secondary); font-size: 12px; font-style: italic; }
 .viz-svg .whisker { stroke: #0f172a; stroke-width: 1.25; }
