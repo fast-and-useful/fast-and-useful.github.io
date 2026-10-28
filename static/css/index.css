@@ -977,6 +977,8 @@ a:focus {
    Fast and Useful only: method steps, equation, compact tables, disabled
    chips, and the bar/scatter marks drawn by static/js/figures.js.
    --------------------------------------------------------------------------- */
+.hero.is-tight-bottom > .hero-body { padding-bottom: 1.5rem; }
+.hero.teaser > .container > .hero-body { padding-top: 0.5rem; }
 .chip:disabled, .chip:disabled:hover { opacity: 0.4; cursor: default; border-color: var(--viz-grid, #e5e7eb); }
 .method-steps {
   max-width: 44rem;
