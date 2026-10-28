@@ -974,10 +974,9 @@ a:focus {
 }
 
 /* ---------------------------------------------------------------------------
-   Fast and Useful only: method steps, equation, compact tables, pending
-   buttons, and the bar/scatter marks drawn by static/js/figures.js.
+   Fast and Useful only: method steps, equation, compact tables, and the
+   bar/scatter marks drawn by static/js/figures.js.
    --------------------------------------------------------------------------- */
-.button.is-pending { opacity: 0.55; cursor: default; pointer-events: none; box-shadow: none; }
 .method-steps {
   max-width: 44rem;
   margin: 0 auto 2rem;
