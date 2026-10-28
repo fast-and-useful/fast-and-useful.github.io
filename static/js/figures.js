@@ -68,13 +68,11 @@
   };
 
   var FINEGRAINED = {
+    byGroup: true,
     views: [
-      { id: 'food', label: 'Food-101', sub: '101 dishes, real test images.',
-        insight: 'Every adapter beats its released student and, where shown, base-first and SDA; DP-DMD’s student rises from 6.9 to 21.8.' },
-      { id: 'cars', label: 'Stanford Cars', sub: '196 car models, real test images.',
-        insight: 'The one fine-grained case where an adapter trails base-first: klein, 36.2 against 38.8. SD-Turbo’s adapter leads base-first by 3.5 points.' },
-      { id: 'pets', label: 'Oxford-IIIT Pets', sub: '37 cat and dog breeds, real test images.',
-        insight: 'Z-Image-Turbo’s adapter leads SDA by 11.6 points, and DP-DMD’s student nearly quadruples, from 12.5 to 46.6.' }
+      { id: 'food', label: 'Food-101', sub: '101 dishes, real test images.' },
+      { id: 'cars', label: 'Stanford Cars', sub: '196 car models, real test images.' },
+      { id: 'pets', label: 'Oxford-IIIT Pets', sub: '37 cat and dog breeds, real test images.' }
     ],
     max: 70,
     note: 'ResNet-50 top-1, 500 generated images per class, mean ± SD over three classifier seeds; one adapter run, trained on ImageNet-100 class names and applied unchanged.',
@@ -94,7 +92,7 @@
         { label: 'SDA, public diversity LoRA', short: 'SDA', role: 'other', nfe: 8, v: { food: [16.8, 0.3], cars: [54.6, 0.2], pets: [37.8, 0.4] } },
         { label: 'Ours', role: 'ours', nfe: 7, v: { food: [23.4, 0.5], cars: [60.0, 0.1], pets: [49.4, 0.9] } }
       ] },
-      { label: 'DP-DMD’s released student', rows: [
+      { label: 'DP-DMD’s released student', short: 'DP-DMD', rows: [
         { label: 'DP-DMD student', role: 'released', nfe: 4, v: { food: [6.9, 0.2], cars: [45.4, 0.7], pets: [12.5, 0.3] } },
         { label: 'DP-DMD + ours', role: 'ours', nfe: 3, v: { food: [21.8, 0.4], cars: [56.4, 0.7], pets: [46.6, 0.8] } }
       ] }
