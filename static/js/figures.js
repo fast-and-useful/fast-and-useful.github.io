@@ -1,10 +1,8 @@
 // Interactive sections for the Fast and Useful page: grouped accuracy bars
 // (main results, fine-grained transfer) and accuracy against
 // generation time. Numbers are the paper draft's
-// (Overleaf 154b522): Table S-main-complete (tables/t1-main.tex) for the
-// main and cost charts, plus the two unguided-base cells only Table 1
-// (t1-scale-transfer) has: klein 20 steps at 200 classes and SD 2.1 at
-// ImageNet-1k. Seconds per image at full precision from
+// (Overleaf 18d7faa): Table S-main-complete (tables/t1-main.tex) for the
+// main and cost charts. Seconds per image at full precision from
 // code/results/sets.csv (the input of Fig. 4); Table 4 (t3-finegrained);
 // Fig. 3 for SDA and DP-DMD. Plain SVG, no libraries.
 (function () {
